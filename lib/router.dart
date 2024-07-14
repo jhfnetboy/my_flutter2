@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//import 'package:my_flutter2/pages/common/web_view_page.dart';
+import 'package:my_flutter2/pages/common/web_view_page.dart';
 import 'package:my_flutter2/util/struct/router.dart';
 
 /// app 协议头
@@ -21,14 +21,16 @@ class Router {
   /// 需要特别注意以下逻辑
   /// -1 不在首页，则执行跳转
   /// 大于 -1 则为首页，需要在首页进行 tab 切换，而不是进行跳转
-  int open(BuildContext context, String url, [String title]) {
+  int open(BuildContext context, String url, [String? title]) {
     // 非entrance入口标识
     int notEntrancePageIndex = -1;
 
     if (url.startsWith('https://') || url.startsWith('http://')) {
       // 打开网页
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //return CommonWebViewPage(url: url); // 请注意，打开这部分注释，需要在 pubspec.yaml 中增加 flutter_webview_plugin 库的依赖，不然会报错，同时打开上面 import 的注释即可使用，具体请查看 pages/common/web_view_page.dart 文件
+        return CommonWebViewPage(
+            url:
+                url); // 请注意，打开这部分注释，需要在 pubspec.yaml 中增加 flutter_webview_plugin 库的依赖，不然会报错，同时打开上面 import 的注释即可使用，具体请查看 pages/common/web_view_page.dart 文件
       }));
       return notEntrancePageIndex;
     }
@@ -39,7 +41,7 @@ class Router {
       return notEntrancePageIndex;
     }
 
-    int entranceIndex = routerMapping[urlParseRet['action']].entranceIndex;
+    int entranceIndex = routerMapping[urlParseRet['action']]!.entranceIndex;
     if (entranceIndex > notEntrancePageIndex) {
       // 判断为首页，返回切换的tab信息
       return entranceIndex;
@@ -64,7 +66,7 @@ class Router {
 
     int placeIndex = url.indexOf('?');
 
-    if (url == '' || url == null) {
+    if (url == '') {
       return {'action': 'default', 'params': null};
     }
     if (placeIndex < 0) {
@@ -73,21 +75,14 @@ class Router {
 
     String action = url.substring(0, placeIndex);
     String paramStr = url.substring(placeIndex + 1);
-
-    if (paramStr == null) {
-      return {'action': action, 'params': null};
-    }
-
     Map params = {};
     List<String> paramsStrArr = paramStr.split('&');
     for (String singleParamsStr in paramsStrArr) {
       List<String> singleParamsArr = singleParamsStr.split('=');
       // 获取组件参数
-      if (routerMapping[action].params != null) {
-        List<String> paramsList = routerMapping[action].params;
-        if (paramsList.contains(singleParamsArr[0])) {
-          params[singleParamsArr[0]] = singleParamsArr[1];
-        }
+      List<String> paramsList = routerMapping[action]!.params;
+      if (paramsList.contains(singleParamsArr[0])) {
+        params[singleParamsArr[0]] = singleParamsArr[1];
       }
     }
     return {'action': action, 'params': params};
@@ -125,9 +120,9 @@ class Router {
   Widget getPageByRouter(String pageName) {
     Widget pageWidget;
     if (routerMapping[pageName] != null) {
-      pageWidget = routerMapping[pageName].widget;
+      pageWidget = routerMapping[pageName]!.widget;
     } else {
-      pageWidget = routerMapping['default'].widget;
+      pageWidget = routerMapping['default']!.widget;
     }
     return pageWidget;
   }
