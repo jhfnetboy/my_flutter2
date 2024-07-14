@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,21 +16,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AAStar Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -46,11 +34,31 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-  int _counter = 0;
+  String _response = "No response";
+  final String firstAPIUrl =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
 
-  void _getResponse() {
+  Dio dio = Dio();
+
+  Future<void> _getResponse() async {
+    Response resP = await dio.post(firstAPIUrl,
+        data: {
+          "captcha": "111111",
+          "email": "jhfnetboy@aastar.org",
+          "network": "ethereum-mainnet",
+          "origin": "https://aastar.org"
+        },
+        options: Options(
+          headers: {
+            Headers.contentTypeHeader: "application/json",
+            HttpHeaders.userAgentHeader:
+                "Apifox/1.0.0 (https://apifox.com)" // Set the content-length.
+          },
+        ));
+
     setState(() {
-      debugPrint("I am here!, get some response:");
+      print(resP);
+      // debugPrint("I am here!, get some response: $resP");
     });
   }
 
@@ -69,7 +77,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
               'You invoke a API named:',
             ),
             Text(
-              '$_counter',
+              _response,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
@@ -77,8 +85,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _getResponse,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        tooltip: 'Invoke',
+        child: const Icon(Icons.rocket_launch),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
