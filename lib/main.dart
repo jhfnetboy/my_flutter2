@@ -34,6 +34,7 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  String interfaceAPI = ""; //input from textInput
   String _response = "No response";
   int times = 0;
   final String firstAPIUrl =
@@ -72,6 +73,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         times = times + 1;
         debugPrint("Begin -----------------------");
         debugPrint("Invoke time is: ${times}");
+        debugPrint("Invoking interface: ${interfaceAPI}");
         debugPrint("Response Status is: ${resP.statusMessage}");
         debugPrint("Response Status Code is: ${resP.statusCode}");
         debugPrint("Response Data is: ${resP.data}");
@@ -103,11 +105,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You invoke a API named:',
-            ),
+            Text(
+                'Type 1 or 2 or number to autocomplete the following possible results: \n ${AutocompleteBasic._kOptions}.'),
+            const AutocompleteBasic(),
             Text(
               _response,
               style: Theme.of(context).textTheme.headlineMedium,
@@ -120,6 +122,37 @@ class _MyLoginPageState extends State<MyLoginPage> {
         tooltip: 'Invoke',
         child: const Icon(Icons.rocket_launch),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class AutocompleteBasic extends StatelessWidget {
+  const AutocompleteBasic({super.key});
+
+  static const List<String> _kOptions = <String>[
+    '1. /api/passkey/v1/reg/prepare \n',
+    '2. /api/passkey/v1/reg \n',
+    '3. /api/passkey/v1/reg/verify \n',
+    '4. /api/passkey/v1/sign \n',
+    '5. /api/passkey/v1/sign/verify \n',
+    '6. /api/passkey/v1/payment/sign \n',
+    '7. /api/passkey/v1/payment/sign/verify'
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<String>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<String>.empty();
+        }
+        return _kOptions.where((String option) {
+          return option.contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (String selection) {
+        debugPrint('You just selected $selection');
+      },
     );
   }
 }
