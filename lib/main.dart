@@ -35,31 +35,63 @@ class MyLoginPage extends StatefulWidget {
 
 class _MyLoginPageState extends State<MyLoginPage> {
   String _response = "No response";
+  int times = 0;
   final String firstAPIUrl =
       "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
 
   Dio dio = Dio();
 
   Future<void> _getResponse() async {
-    Response resP = await dio.post(firstAPIUrl,
-        data: {
-          "captcha": "111111",
-          "email": "jhfnetboy@aastar.org",
-          "network": "ethereum-mainnet",
-          "origin": "https://aastar.org"
-        },
-        options: Options(
-          headers: {
-            Headers.contentTypeHeader: "application/json",
-            HttpHeaders.userAgentHeader:
-                "Apifox/1.0.0 (https://apifox.com)" // Set the content-length.
+    try {
+      Response resP = await dio.post(firstAPIUrl,
+          data: {
+            "captcha": "111111",
+            "email": "jhfnetboy@aastar.org",
+            "network": "ethereum-mainnet",
+            "origin": "https://aastar.org"
           },
-        ));
-
-    setState(() {
-      print(resP);
-      // debugPrint("I am here!, get some response: $resP");
-    });
+          options: Options(
+            headers: {
+              Headers.contentTypeHeader: "application/json",
+              HttpHeaders.userAgentHeader:
+                  "Apifox/1.0.0 (https://apifox.com)" // Set the content-length.
+            },
+          ));
+      switch (resP.statusCode) {
+        case 400:
+          _response = "Response status code is 400.";
+        case 200:
+          _response = "Response status code is 200.";
+          break;
+        default:
+          _response = "Response status code is ${resP.statusCode}";
+      }
+      setState(() {
+        // debugPrint((resP).toString());
+        // _response = resP.toString();
+        times = times + 1;
+        debugPrint("Begin -----------------------");
+        debugPrint("Invoke time is: ${times}");
+        debugPrint("Response Status is: ${resP.statusMessage}");
+        debugPrint("Response Status Code is: ${resP.statusCode}");
+        debugPrint("Response Data is: ${resP.data}");
+        debugPrint("Response Headers is: ${resP.headers}");
+        debugPrint("Response realUri is: ${resP.realUri}");
+        debugPrint("Response requestOptions is: ${resP.requestOptions}");
+        print((resP.data).runtimeType);
+        debugPrint("----------------------- End");
+        // Map<String, dynamic> resp = jsonDecode(resP.data);
+        // print('Name: ${user['name']}');
+        // debugPrint((resp['rp']['user']['name']).toString());
+        // _response = _response + (resp['rp']['user']['name']).toString();
+        // print(jsonEncode(resP.data));
+      });
+    } catch (e) {
+      setState(() {
+        _response = "Error: $e";
+        // _response =
+      });
+    }
   }
 
   @override
