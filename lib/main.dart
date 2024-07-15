@@ -34,11 +34,19 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-  String interfaceAPI = ""; //input from textInput
   String _response = "No response";
+  String interfaceAPI = ""; //input from textInput
   int times = 0;
   final String firstAPIUrl =
       "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
+
+  final myController = TextEditingController();
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
 
   Dio dio = Dio();
 
@@ -81,7 +89,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         debugPrint("Response realUri is: ${resP.realUri}");
         debugPrint("Response requestOptions is: ${resP.requestOptions}");
         print((resP.data).runtimeType);
-        debugPrint("----------------------- End");
+        debugPrint("----------------------- ${times} End");
         // Map<String, dynamic> resp = jsonDecode(resP.data);
         // print('Name: ${user['name']}');
         // debugPrint((resp['rp']['user']['name']).toString());
@@ -108,6 +116,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text(
+                // controller: myController, //todo ?
                 'Type 1 or 2 or number to autocomplete the following possible results: \n ${AutocompleteBasic._kOptions}.'),
             const AutocompleteBasic(),
             Text(
@@ -152,6 +161,7 @@ class AutocompleteBasic extends StatelessWidget {
       },
       onSelected: (String selection) {
         debugPrint('You just selected $selection');
+        // interfaceAPI = selection.toString();
       },
     );
   }
