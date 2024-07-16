@@ -108,6 +108,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
     super.dispose();
   }
 
+  void handleSelection(String selection) {
+    debugPrint('Selected option: $selection');
+  }
+
   Dio dio = Dio();
 
   Future<void> _getResponse() async {
@@ -157,10 +161,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
         // _response =
       });
     }
-  }
-
-  void handleSelection(String selection) {
-    debugPrint('Selected option: $selection');
   }
 
   @override
@@ -220,10 +220,6 @@ class AutocompleteBasic extends StatelessWidget {
         });
       },
       onSelected: onSelected,
-      // onSelected: (String selection) {
-      //   debugPrint('You just selected $selection');
-      //   // interfaceAPI = selection.toString();
-      // },
     );
   }
 }
