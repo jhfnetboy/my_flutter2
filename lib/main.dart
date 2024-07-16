@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key, required this.title});
   final String title;
+  // final String BaseUrl = "https://anotherairaccountcommunitynode.onrender.com";
 
   @override
   State<MyLoginPage> createState() => _MyLoginPageState();
@@ -44,6 +45,60 @@ class _MyLoginPageState extends State<MyLoginPage> {
   int times = 0;
   final String firstAPIUrl =
       "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
+  // String BaseUrl = "https://anotherairaccountcommunitynode.onrender.com";
+  final String APIUrl2 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
+  final String APIUrl3 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg/verify";
+  final String APIUrl4 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/sign";
+  final String APIUrl5 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/sign/verify";
+  final String APIUrl6 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/payment/sign";
+  final String APIUrl7 =
+      "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/payment/sign/verify";
+
+  Map<String, dynamic> data2 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
+
+  Map<String, dynamic> data3 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
+
+  Map<String, dynamic> data4 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
+  Map<String, dynamic> data5 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
+
+  Map<String, dynamic> data6 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
+
+  Map<String, dynamic> data7 = {
+    "captcha": "111111",
+    "email": "jhfnetboy@aastar.org",
+    "network": "ethereum-mainnet",
+    "origin": "https://aastar.org"
+  };
 
   final myController = TextEditingController();
   @override
@@ -57,13 +112,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   Future<void> _getResponse() async {
     try {
-      Response resP = await dio.post(firstAPIUrl,
-          data: {
-            "captcha": "111111",
-            "email": "jhfnetboy@aastar.org",
-            "network": "ethereum-mainnet",
-            "origin": "https://aastar.org"
-          },
+      Response resP = await dio.post(APIUrl2,
+          data: data2,
           options: Options(
             headers: {
               Headers.contentTypeHeader: "application/json",
