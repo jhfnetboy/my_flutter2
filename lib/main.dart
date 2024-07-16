@@ -109,6 +109,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }
   }
 
+  void handleSelection(String selection) {
+    debugPrint('Selected option: $selection');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,7 +127,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             Text(
                 // controller: myController, //todo ?
                 'Type 1 or 2 or number to autocomplete the following possible results: \n ${AutocompleteBasic._kOptions}.'),
-            const AutocompleteBasic(),
+            AutocompleteBasic(onSelected: handleSelection),
             Text(
               _response,
               style: Theme.of(context).textTheme.headlineMedium,
@@ -141,7 +145,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
 }
 
 class AutocompleteBasic extends StatelessWidget {
-  const AutocompleteBasic({super.key});
+  const AutocompleteBasic({super.key, required this.onSelected});
+  final void Function(String) onSelected; // 添加这行
 
   static const List<String> _kOptions = <String>[
     '1. /api/passkey/v1/reg/prepare \n',
@@ -164,10 +169,11 @@ class AutocompleteBasic extends StatelessWidget {
           return option.contains(textEditingValue.text.toLowerCase());
         });
       },
-      onSelected: (String selection) {
-        debugPrint('You just selected $selection');
-        // interfaceAPI = selection.toString();
-      },
+      onSelected: onSelected,
+      // onSelected: (String selection) {
+      //   debugPrint('You just selected $selection');
+      //   // interfaceAPI = selection.toString();
+      // },
     );
   }
 }
