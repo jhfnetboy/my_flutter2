@@ -7,7 +7,7 @@ class CommonWebViewPage extends StatelessWidget {
   final String url;
 
   /// 构造函数
-  CommonWebViewPage({Key? key, required this.url}) : super(key: key);
+  const CommonWebViewPage({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {
