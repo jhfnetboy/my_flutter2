@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 // import 'dart:convert';
@@ -5,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:flutter/services.dart';
-// import 'package:webauthn/webauthn.dart';
+import 'package:webauthn/webauthn.dart';
 // import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
@@ -43,6 +44,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
   String _response = "No response";
   String interfaceAPI = ""; //input from textInput
   int times = 0;
+  // Authenticator(bool authencationRequired, bool strongboxRequired)
+  final authenticator = Authenticator(true, true);
   final String firstAPIUrl =
       "https://anotherairaccountcommunitynode.onrender.com/api/passkey/v1/reg";
   // String BaseUrl = "https://anotherairaccountcommunitynode.onrender.com";
@@ -110,9 +113,63 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void handleSelection(String selection) {
     debugPrint('Selected option: $selection');
+    // var credentialOptions = _getResponse2();
+    Map<String, dynamic> credentialOptions = {
+      "rp": {"name": "https://aastar.org", "id": " aastar.org"},
+      "user": {
+        "name": "jhfnetboy@aastar.org",
+        "displayName": "jhfnetboy@aastar.org",
+        "id": "amhmbmV0Ym95QGFhc3Rhci5vcmc"
+      },
+      "challenge": "WC0LkCiCIskeygTeEC6pHXxVlQz5yFl234-adWIpew4",
+      "pubKeyCredParams": [
+        {"type": "public-key", "alg": -7},
+        {"type": "public-key", "alg": -35},
+        {"type": "public-key", "alg": -36},
+        {"type": "public-key", "alg": -257},
+        {"type": "public-key", "alg": -258},
+        {"type": "public-key", "alg": -259},
+        {"type": "public-key", "alg": -37},
+        {"type": "public-key", "alg": -38},
+        {"type": "public-key", "alg": -39},
+        {"type": "public-key", "alg": -8}
+      ],
+      "timeout": 300000,
+      "authenticatorSelection": {
+        "authenticatorAttachment": "platform",
+        "requireResidentKey": false,
+        "userVerification": required
+      }
+    };
+
+    makeCredentialFromJson(credentialOptions);
+  }
+
+  // var jsonOptions = '{"name":"myname", "age":"22"}';
+  // var parsedJson = json.decode(jsonOptions);
+  void makeCredentialFromJson(Map<String, dynamic> optionsCredential) {
+    final makeCredentialOptions =
+        MakeCredentialOptions.fromJson(optionsCredential);
+    final attestation = authenticator.makeCredential(makeCredentialOptions);
+    // Uint8List attestationBytes = attestation.asCBOR();
+    // String attestationJson = attestation.asJSON();
+    debugPrint('attestation: $attestation');
   }
 
   Dio dio = Dio();
+
+  Future<void> _getResponse2(
+      String APIUrl, Map<String, dynamic> dataPost, Options optionsPost) async {
+    try {
+      Response resP =
+          await dio.post(APIUrl, data: dataPost, options: optionsPost);
+    } catch (e) {
+      setState(() {
+        _response = "Error: $e";
+        // _response =
+      });
+    }
+  }
 
   Future<void> _getResponse() async {
     try {
