@@ -39,6 +39,7 @@ dependencies:
   dio: ^5.5.0+1
   webauthn: ^0.2.3
   sqflite_common_ffi: ^2.3.3
+  local_auth: ^2.2.0
 
 dev_dependencies:
   flutter_test:

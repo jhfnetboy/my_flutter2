@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:webauthn/webauthn.dart';
 // import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:local_auth/local_auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +42,25 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  final LocalAuthentication auth = LocalAuthentication();
+
+  Future<void> authenticate() async {
+    final bool canCheckBiometrics = await auth.canCheckBiometrics;
+    final bool authenticated = await auth.authenticate(
+      localizedReason: '請掃描你的指紋進行認證',
+      options: const AuthenticationOptions(
+        stickyAuth: true,
+        biometricOnly: true,
+      ),
+    );
+
+    if (authenticated) {
+      print('認證成功！');
+    } else {
+      print('認證失敗！');
+    }
+  }
+
   String _response = "No response";
   String interfaceAPI = ""; //input from textInput
   int times = 0;
@@ -239,6 +259,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
               _response,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  authenticate();
+                },
+                child: Text('進行生物識別認證'),
+              ),
+            )
           ],
         ),
       ),
